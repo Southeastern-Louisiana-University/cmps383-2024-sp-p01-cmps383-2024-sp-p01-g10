@@ -13,7 +13,8 @@ public class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Hotel>().HasData(
+   
+            modelBuilder.Entity<Hotel>().HasData(
             new Hotel { Id = 1, Name = "Hotel 1", Address = "This is the first address" },
             new Hotel { Id = 2, Name = "Hotel 2", Address = "This is the second address" },
             new Hotel { Id = 3, Name = "Hotel 3", Address = "This is the third address" }
