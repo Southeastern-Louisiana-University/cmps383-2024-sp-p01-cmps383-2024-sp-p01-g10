@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Selu383.SP24.Api.Features.Hotel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +14,15 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+var db = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>();
+db.Database.Migrate();
+db.Set<Hotel>().AddRange(new List<Hotel>
 {
-    var db = scope.ServiceProvider.GetRequiredService<DataContext>();
-    db.Database.Migrate();
-}
+            new Hotel { Name = "Hotel 1", Address = "This is the first address" },
+            new Hotel { Name = "Hotel 2", Address = "This is the second address" },
+            new Hotel { Name = "Hotel 3", Address = "This is the third address" }
+});
+db.SaveChanges();
 
 
 // Configure the HTTP request pipeline.
