@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Selu383.SP24.Api.Features.Hotel;
 using System.Linq.Expressions;
 
@@ -53,7 +55,41 @@ namespace Selu383.SP24.Api.Controllers
             return result;
         }
 
+        [HttpPost]
+        public ActionResult<HotelDto> Create(HotelDto createDto)
+        {
+
+            if (createDto.Name.Equals (""))
+            {
+                return BadRequest();
+            }
+
+            if (createDto.Name.Length > 120)
+            {
+                return BadRequest();
+            }
+
+            if (string.IsNullOrEmpty(createDto.Address))
+            {
+                return BadRequest();
+            }
+
+            var hotelToCreate = new Hotel
+            {
+                Name = createDto.Name,
+                Address = createDto.Address,
+            };
+
+            dataContext.Set<Hotel>().Add(hotelToCreate);
+            dataContext.SaveChanges();
+
+            var createdDto = MapDto().Compile().Invoke(hotelToCreate);
+            return CreatedAtAction(nameof(GetById), new { id = createdDto.Id }, createdDto);
+        }
+
+
 
 
     }
 }
+

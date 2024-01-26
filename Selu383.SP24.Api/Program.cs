@@ -16,6 +16,7 @@ var app = builder.Build();
 
 var db = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>();
 db.Database.Migrate();
+
 db.Set<Hotel>().AddRange(new List<Hotel>
 {
             new Hotel { Name = "Hotel 1", Address = "This is the first address" },
