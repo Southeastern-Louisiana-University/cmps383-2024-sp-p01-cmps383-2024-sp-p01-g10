@@ -87,7 +87,22 @@ namespace Selu383.SP24.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { id = createdDto.Id }, createdDto);
         }
 
+        [HttpDelete ("{id}")]
+        public ActionResult Delete(int id)
+        {
+            var hotelToDelete = dataContext.Set<Hotel>()
+            .FirstOrDefault(hotel => hotel.Id == id);
 
+            if (hotelToDelete == null)
+            {
+                return NotFound();
+            }
+
+            dataContext.Set<Hotel>().Remove(hotelToDelete);
+            dataContext.SaveChanges();
+
+            return Ok();
+        }
 
 
     }
