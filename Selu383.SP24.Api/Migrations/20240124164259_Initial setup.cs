@@ -2,10 +2,12 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Selu383.SP24.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initialsetup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,6 +24,16 @@ namespace Selu383.SP24.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Hotel", x => x.Id);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Hotel",
+                columns: new[] { "Id", "Address", "Name" },
+                values: new object[,]
+                {
+                    { 1, "This is the first address", "Hotel 1" },
+                    { 2, "This is the second address", "Hotel 2" },
+                    { 3, "This is the third address", "Hotel 3" }
                 });
         }
 

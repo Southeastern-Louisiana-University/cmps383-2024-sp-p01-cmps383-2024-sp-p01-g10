@@ -45,8 +45,8 @@ namespace Selu383.SP24.Api.Controllers
         {
             var result = dataContext
                 .Set<Hotel>()
-                .Select(MapDto()).
-                FirstOrDefault(x => x.Id == id);
+                .Select(MapDto())
+                .FirstOrDefault(x => x.Id == id);
 
             if (result == null)
             {
@@ -59,17 +59,7 @@ namespace Selu383.SP24.Api.Controllers
         public ActionResult<HotelDto> Create(HotelDto createDto)
         {
 
-            if (createDto.Name.Equals (""))
-            {
-                return BadRequest();
-            }
-
-            if (createDto.Name.Length > 120)
-            {
-                return BadRequest();
-            }
-
-            if (string.IsNullOrEmpty(createDto.Address))
+            if (createDto.Name.Equals("") || createDto.Name.Length > 120 || string.IsNullOrEmpty(createDto.Address))
             {
                 return BadRequest();
             }
@@ -87,10 +77,38 @@ namespace Selu383.SP24.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { id = createdDto.Id }, createdDto);
         }
 
-        [HttpDelete ("{id}")]
+        [HttpPut("{id}")]
+        public ActionResult<HotelDto> Update(int id, HotelDto hotel)
+        {
+
+            var hotelToUpdate = dataContext
+                .Set<Hotel>()
+                .FirstOrDefault(x => x.Id == id);
+
+            if (hotelToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            hotelToUpdate.Name = hotel.Name;
+            hotelToUpdate.Address = hotel.Address;
+
+            dataContext.SaveChanges();
+
+            return new HotelDto
+            {
+                Id = hotelToUpdate.Id,
+                Name = hotelToUpdate.Name,
+                Address = hotelToUpdate.Address
+            };
+
+        }
+
+        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            var hotelToDelete = dataContext.Set<Hotel>()
+            var hotelToDelete = dataContext
+            .Set<Hotel>()
             .FirstOrDefault(hotel => hotel.Id == id);
 
             if (hotelToDelete == null)
@@ -102,6 +120,7 @@ namespace Selu383.SP24.Api.Controllers
             dataContext.SaveChanges();
 
             return Ok();
+
         }
 
 
